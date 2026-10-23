@@ -1,3 +1,9 @@
+@file:OptIn(
+    androidx.compose.foundation.ExperimentalFoundationApi::class,
+    androidx.compose.foundation.layout.ExperimentalLayoutApi::class,
+    androidx.compose.material3.ExperimentalMaterial3Api::class
+)
+
 package com.bardia.fileexplorer.design
 
 import android.net.Uri
@@ -24,6 +30,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items as gridItems
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -55,7 +62,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.red
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -169,7 +175,7 @@ fun FileCollection(
                 ),
                 horizontalArrangement = Arrangement.spacedBy(4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(
+                gridItems(
                     rows, key = { if (it is Row2.Header) "h:${it.title}" else (it as Row2.Item).entry.uri },
                     span = { if (it is Row2.Header) GridItemSpan(maxLineSpan) else GridItemSpan(1) },
                     contentType = { if (it is Row2.Header) 0 else 1 }
@@ -320,6 +326,7 @@ private fun DetailsHeader(sortField: SortField, ascending: Boolean, onSort: ((So
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun HeaderCell(label: String, field: SortField, current: SortField, ascending: Boolean, onSort: ((SortField) -> Unit)?, modifier: Modifier) {
     Row(
