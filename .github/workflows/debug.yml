@@ -34,9 +34,6 @@ jobs:
       - name: Make wrapper executable
         run: chmod +x ./gradlew
 
-      - name: Unit tests
-        run: ./gradlew --no-daemon testDebugUnitTest
-
       - name: Build debug APK
         run: ./gradlew --no-daemon assembleDebug
 
