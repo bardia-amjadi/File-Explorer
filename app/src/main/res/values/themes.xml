@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.FileExplorer" parent="android:Theme.DeviceDefault.DayNight">
+        <item name="android:windowSplashScreenBackground">#0F6CBD</item>
+    </style>
+</resources>

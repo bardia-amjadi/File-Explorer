@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- The app trash can hold user data and persisted folder grants do not survive a restore. -->
+    <exclude domain="file" path="trash/" />
+    <exclude domain="sharedpref" path="." />
+</full-backup-content>
