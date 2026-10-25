@@ -81,14 +81,45 @@ class StorageRepository(
     /** Checks every stored root against the system's persisted grants and the provider. */
     suspend fun checkRoots(): List<RootState> = withContext(Dispatchers.IO) {
         val persisted = resolver.persistedUriPermissions.filter { it.isReadPermission }.map { it.uri.toString() }.toSet()
+        val allFiles = isAllFilesGranted()
         metadata.roots.first().map { r ->
             val status = when {
+                r.treeUri.startsWith("file:") -> when {
+                    !allFiles -> RootStatus.ACCESS_REVOKED
+                    !java.io.File(Uri.parse(r.rootUri).path ?: "").exists() -> RootStatus.UNAVAILABLE
+                    else -> RootStatus.OK
+                }
                 r.treeUri !in persisted -> RootStatus.ACCESS_REVOKED
                 fs.stat(Uri.parse(r.rootUri)) == null -> RootStatus.UNAVAILABLE
                 else -> RootStatus.OK
             }
             RootState(r, status)
         }
+    }
+
+    /** True when the user enabled "All files access" for this app in system settings. */
+    fun isAllFilesGranted(): Boolean = android.os.Environment.isExternalStorageManager()
+
+    /** Intent that opens this app's "All files access" switch. */
+    fun allFilesIntent(): Intent = Intent(android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:${context.packageName}"))
+
+    fun allFilesFallbackIntent(): Intent = Intent(android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+
+    /** With all-files access: registers every mounted volume as a real-path root; without it: forgets those roots. */
+    suspend fun syncLocalRoots() = withContext(Dispatchers.IO) {
+        val sm = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
+        val current = metadata.roots.first().filter { it.treeUri.startsWith("file:") }
+        if (!isAllFilesGranted()) {
+            current.forEach { metadata.removeRoot(it.treeUri) }
+            return@withContext
+        }
+        val wanted = sm.storageVolumes.filter { it.state == android.os.Environment.MEDIA_MOUNTED || it.state == android.os.Environment.MEDIA_MOUNTED_READ_ONLY }
+            .mapNotNull { it.directory }
+        for (dir in wanted) {
+            val uri = Uri.fromFile(dir).toString()
+            if (current.none { it.treeUri == uri }) metadata.addRoot(GrantedRoot(uri, uri, dir.path))
+        }
+        current.filter { c -> wanted.none { Uri.fromFile(it).toString() == c.treeUri } }.forEach { metadata.removeRoot(it.treeUri) }
     }
 
     fun volumes(): List<VolumeInfo> {
@@ -143,6 +174,18 @@ class StorageRepository(
          * Works with the external storage provider, whose document ids are "volume:path/segments".
          */
         fun trailTo(root: GrantedRoot, relativePath: String): List<Crumb>? {
+            if (root.treeUri.startsWith("file:")) {
+                val base = java.io.File(Uri.parse(root.rootUri).path ?: return null)
+                if (!base.path.endsWith("/emulated/0")) return null
+                var dir = base
+                val trail = arrayListOf(Crumb(root.rootUri, root.name))
+                for (seg in relativePath.split('/').filter { it.isNotEmpty() }) {
+                    dir = java.io.File(dir, seg)
+                    if (!dir.isDirectory) return null
+                    trail.add(Crumb(Uri.fromFile(dir).toString(), seg))
+                }
+                return trail
+            }
             return try {
                 val tree = Uri.parse(root.treeUri)
                 val rootId = DocumentsContract.getTreeDocumentId(tree)

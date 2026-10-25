@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!--
-        Permissions are intentionally minimal. The app does NOT request MANAGE_EXTERNAL_STORAGE:
-        file access is granted per folder through the Storage Access Framework (persisted URI grants).
-        Media permissions are requested lazily, only when the user opens an Images/Videos/Audio category.
+        All-files access is requested at runtime (Settings > "All files access"), so the app can browse real paths
+        such as /storage/emulated/0. Android still blocks Android/data and Android/obb for every normal app.
+        Without it the app falls back to per-folder grants (Storage Access Framework).
     -->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />

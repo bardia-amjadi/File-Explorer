@@ -15,6 +15,13 @@ import com.bardia.fileexplorer.core.FileTypes
  * temporary read grant); `file://` URIs are never exposed, and app-private files are skipped here.
  */
 object IntentUtil {
+    /** Real-path files (all-files access) are exposed through the FileProvider as content:// URIs. */
+    fun shareUri(context: Context, entry: FileEntry): Uri {
+        val uri = Uri.parse(entry.uri)
+        if (uri.scheme != "file") return uri
+        return androidx.core.content.FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", java.io.File(uri.path!!))
+    }
+
     fun mimeFor(entry: FileEntry): String =
         FileTypes.effectiveMime(entry)
             ?: MimeTypeMap.getSingleton().getMimeTypeFromExtension(entry.extension)
@@ -22,8 +29,7 @@ object IntentUtil {
 
     /** Opens a file in another app (with a chooser). Returns an error message, or null on success. */
     fun open(context: Context, entry: FileEntry): String? {
-        if (entry.isLocal) return "This file lives in the app's private storage and cannot be opened by other apps."
-        val uri = Uri.parse(entry.uri)
+        val uri = shareUri(context, entry)
         val intent = Intent(Intent.ACTION_VIEW)
             .setDataAndType(uri, mimeFor(entry))
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -40,12 +46,12 @@ object IntentUtil {
 
     /** Shares files via the system Sharesheet. Folders cannot be shared; the message explains that. */
     fun share(context: Context, entries: List<FileEntry>): String? {
-        val files = entries.filter { !it.isDirectory && !it.isLocal }
+        val files = entries.filter { !it.isDirectory }
         val folders = entries.count { it.isDirectory }
         if (files.isEmpty()) {
             return if (folders > 0) "Folders cannot be shared directly. Create a ZIP archive first, then share the archive." else "Nothing to share."
         }
-        val uris = files.map { Uri.parse(it.uri) }
+        val uris = files.map { shareUri(context, it) }
         val intent = if (files.size == 1) {
             Intent(Intent.ACTION_SEND).setType(mimeFor(files[0])).putExtra(Intent.EXTRA_STREAM, uris[0])
         } else {

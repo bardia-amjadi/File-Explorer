@@ -22,65 +22,68 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bardia.fileexplorer.core.ThemeMode
 
-/** Fluent-inspired palette: Windows 11 accent blue, Mica-like neutral layers. */
+/** GNOME/Adwaita-inspired "Linux desktop" palette: flat surfaces, blue accent, blue folders, monospace file names. */
 object Fluent {
-    val Accent = Color(0xFF0067C0)
-    val AccentDark = Color(0xFF60CDFF)
-    val FolderYellow = Color(0xFFF2B93B)
-    val FolderYellowDark = Color(0xFFE8A92A)
-    val Success = Color(0xFF0F7B0F)
-    val Danger = Color(0xFFC42B1C)
+    val Accent = Color(0xFF3584E4)
+    val AccentDark = Color(0xFF78AEED)
+    val FolderYellow = Color(0xFF62A0EA)      // folders are blue like the app icon (name kept for existing references)
+    val FolderYellowDark = Color(0xFF99C1F1)
+    val Success = Color(0xFF26A269)
+    val Danger = Color(0xFFC01C28)
 }
 
 private val LightColors = lightColorScheme(
     primary = Fluent.Accent, onPrimary = Color.White,
-    primaryContainer = Color(0xFFD6E8F8), onPrimaryContainer = Color(0xFF00305A),
-    secondary = Color(0xFF4F6378), onSecondary = Color.White,
-    secondaryContainer = Color(0xFFE3EAF2), onSecondaryContainer = Color(0xFF1B2733),
-    tertiary = Color(0xFF00758F), onTertiary = Color.White,
-    background = Color(0xFFF3F3F3), onBackground = Color(0xFF1B1B1B),
-    surface = Color(0xFFFFFFFF), onSurface = Color(0xFF1B1B1B),
-    surfaceVariant = Color(0xFFEDEDED), onSurfaceVariant = Color(0xFF505050),
-    surfaceContainerLowest = Color.White, surfaceContainerLow = Color(0xFFF9F9F9),
-    surfaceContainer = Color(0xFFF3F3F3), surfaceContainerHigh = Color(0xFFEDEDED), surfaceContainerHighest = Color(0xFFE6E6E6),
-    outline = Color(0xFF8A8A8A), outlineVariant = Color(0xFFD9D9D9),
+    primaryContainer = Color(0xFFD7E6FA), onPrimaryContainer = Color(0xFF0B2E5C),
+    secondary = Color(0xFF5E5C64), onSecondary = Color.White,
+    secondaryContainer = Color(0xFFE6E6EA), onSecondaryContainer = Color(0xFF241F31),
+    tertiary = Color(0xFF26A269), onTertiary = Color.White,
+    background = Color(0xFFFAFAFA), onBackground = Color(0xFF2E3436),
+    surface = Color(0xFFFFFFFF), onSurface = Color(0xFF2E3436),
+    surfaceVariant = Color(0xFFEBEBEB), onSurfaceVariant = Color(0xFF5E5C64),
+    surfaceContainerLowest = Color.White, surfaceContainerLow = Color(0xFFF6F5F4),
+    surfaceContainer = Color(0xFFF0EFEE), surfaceContainerHigh = Color(0xFFEBEBEB), surfaceContainerHighest = Color(0xFFDEDDDA),
+    outline = Color(0xFF9A9996), outlineVariant = Color(0xFFDEDDDA),
     error = Fluent.Danger, onError = Color.White
 )
 
 private val DarkColors = darkColorScheme(
-    primary = Fluent.AccentDark, onPrimary = Color(0xFF00334F),
-    primaryContainer = Color(0xFF00497A), onPrimaryContainer = Color(0xFFCCE5FF),
-    secondary = Color(0xFFB7C8DA), onSecondary = Color(0xFF22323F),
-    secondaryContainer = Color(0xFF384857), onSecondaryContainer = Color(0xFFD3E4F6),
-    tertiary = Color(0xFF6ED0E8), onTertiary = Color(0xFF00363F),
-    background = Color(0xFF202020), onBackground = Color(0xFFF0F0F0),
-    surface = Color(0xFF2B2B2B), onSurface = Color(0xFFF0F0F0),
-    surfaceVariant = Color(0xFF383838), onSurfaceVariant = Color(0xFFC7C7C7),
-    surfaceContainerLowest = Color(0xFF191919), surfaceContainerLow = Color(0xFF242424),
-    surfaceContainer = Color(0xFF2B2B2B), surfaceContainerHigh = Color(0xFF333333), surfaceContainerHighest = Color(0xFF3B3B3B),
-    outline = Color(0xFF8F8F8F), outlineVariant = Color(0xFF454545),
-    error = Color(0xFFFF99A4), onError = Color(0xFF5F0010)
+    primary = Fluent.AccentDark, onPrimary = Color(0xFF062A55),
+    primaryContainer = Color(0xFF1C4A86), onPrimaryContainer = Color(0xFFD7E6FA),
+    secondary = Color(0xFFC0BFBC), onSecondary = Color(0xFF241F31),
+    secondaryContainer = Color(0xFF3D3846), onSecondaryContainer = Color(0xFFDEDDDA),
+    tertiary = Color(0xFF8FF0A4), onTertiary = Color(0xFF0B3A1F),
+    background = Color(0xFF1E1E1E), onBackground = Color(0xFFEEEEEC),
+    surface = Color(0xFF242424), onSurface = Color(0xFFEEEEEC),
+    surfaceVariant = Color(0xFF303030), onSurfaceVariant = Color(0xFFC0BFBC),
+    surfaceContainerLowest = Color(0xFF171717), surfaceContainerLow = Color(0xFF1E1E1E),
+    surfaceContainer = Color(0xFF242424), surfaceContainerHigh = Color(0xFF303030), surfaceContainerHighest = Color(0xFF3A3A3A),
+    outline = Color(0xFF77767B), outlineVariant = Color(0xFF3D3D3D),
+    error = Color(0xFFFF7B63), onError = Color(0xFF4A0A00)
 )
 
 private val FluentShapes = Shapes(
-    extraSmall = RoundedCornerShape(4.dp),
-    small = RoundedCornerShape(6.dp),
-    medium = RoundedCornerShape(8.dp),
-    large = RoundedCornerShape(12.dp),
-    extraLarge = RoundedCornerShape(16.dp)
+    extraSmall = RoundedCornerShape(2.dp),
+    small = RoundedCornerShape(3.dp),
+    medium = RoundedCornerShape(4.dp),
+    large = RoundedCornerShape(6.dp),
+    extraLarge = RoundedCornerShape(8.dp)
 )
 
+private val Mono = FontFamily.Monospace
+private val Sans = FontFamily.SansSerif
+
 private val FluentTypography = Typography(
-    headlineSmall = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold, fontSize = 24.sp, lineHeight = 30.sp),
-    titleLarge = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold, fontSize = 20.sp, lineHeight = 26.sp),
-    titleMedium = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, lineHeight = 22.sp),
-    titleSmall = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.SemiBold, fontSize = 14.sp, lineHeight = 20.sp),
-    bodyLarge = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 15.sp, lineHeight = 22.sp),
-    bodyMedium = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 14.sp, lineHeight = 20.sp),
-    bodySmall = TextStyle(fontFamily = FontFamily.SansSerif, fontSize = 12.sp, lineHeight = 16.sp),
-    labelLarge = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Medium, fontSize = 14.sp, lineHeight = 20.sp),
-    labelMedium = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Medium, fontSize = 12.sp, lineHeight = 16.sp),
-    labelSmall = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Medium, fontSize = 11.sp, lineHeight = 14.sp)
+    headlineSmall = TextStyle(fontFamily = Sans, fontWeight = FontWeight.Bold, fontSize = 22.sp, lineHeight = 28.sp),
+    titleLarge = TextStyle(fontFamily = Mono, fontWeight = FontWeight.Bold, fontSize = 18.sp, lineHeight = 24.sp),
+    titleMedium = TextStyle(fontFamily = Mono, fontWeight = FontWeight.Bold, fontSize = 15.sp, lineHeight = 21.sp),
+    titleSmall = TextStyle(fontFamily = Mono, fontWeight = FontWeight.Bold, fontSize = 13.sp, lineHeight = 19.sp),
+    bodyLarge = TextStyle(fontFamily = Mono, fontSize = 14.sp, lineHeight = 20.sp),
+    bodyMedium = TextStyle(fontFamily = Mono, fontSize = 13.sp, lineHeight = 19.sp),
+    bodySmall = TextStyle(fontFamily = Mono, fontSize = 11.sp, lineHeight = 15.sp),
+    labelLarge = TextStyle(fontFamily = Mono, fontWeight = FontWeight.Medium, fontSize = 13.sp, lineHeight = 18.sp),
+    labelMedium = TextStyle(fontFamily = Mono, fontWeight = FontWeight.Medium, fontSize = 11.sp, lineHeight = 15.sp),
+    labelSmall = TextStyle(fontFamily = Mono, fontWeight = FontWeight.Medium, fontSize = 10.sp, lineHeight = 14.sp)
 )
 
 @Composable

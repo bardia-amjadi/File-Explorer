@@ -101,7 +101,7 @@ private fun glyphFor(entry: FileEntry, dark: Boolean): Pair<ImageVector, Color> 
 fun FileGlyph(entry: FileEntry, size: Dp, modifier: Modifier = Modifier, thumbnails: Boolean = true) {
     val dark = MaterialTheme.colorScheme.background.red < 0.5f
     val (icon, tint) = glyphFor(entry, dark)
-    val showThumb = thumbnails && !entry.isDirectory && !entry.isLocal && entry.category == FileCategory.IMAGES &&
+    val showThumb = thumbnails && !entry.isDirectory && entry.category == FileCategory.IMAGES &&
         entry.extension != "svg" && (entry.size < 0 || entry.size < 60L * 1024 * 1024)
     Box(modifier.size(size), contentAlignment = Alignment.Center) {
         Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.fillMaxSize(0.82f))
@@ -348,7 +348,7 @@ private data class DetailColumns(val showDate: Boolean, val showType: Boolean, v
     companion object {
         fun forWidth(w: Dp) = DetailColumns(
             showDate = w >= 380.dp, showType = w >= 640.dp,
-            dateWidth = if (w >= 640.dp) 160.dp else 132.dp, typeWidth = 110.dp, sizeWidth = 76.dp
+            dateWidth = if (w >= 640.dp) 160.dp else 132.dp, typeWidth = 150.dp, sizeWidth = 76.dp
         )
     }
 }
@@ -378,9 +378,15 @@ private fun DetailsRow(
             Text(e.name, style = MaterialTheme.typography.bodyMedium, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
             if (favorite) Icon(Icons.Filled.Star, contentDescription = "Favorite", tint = Fluent.FolderYellow, modifier = Modifier.size(14.dp))
             if (cols.showDate) Text(Format.date(e.modified), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, modifier = Modifier.width(cols.dateWidth))
-            if (cols.showType) Text(FileTypes.typeLabel(e), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(cols.typeWidth))
+            if (cols.showType) Text(if (e.isLocal) unixPerms(e) + "  " + FileTypes.typeLabel(e) else FileTypes.typeLabel(e), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(cols.typeWidth))
             Text(if (e.isDirectory) "" else Format.size(e.size), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant, maxLines = 1, modifier = Modifier.width(cols.sizeWidth))
             if (menuFor != null && !selectionMode) ActionMenuButton(menuFor(e), Modifier.size(40.dp), "Options for ${e.name}") else Spacer(Modifier.width(40.dp))
         }
     }
+}
+
+/** ls -l style flags (d/-, then r w x) as the app itself sees them; only meaningful for real-path entries. */
+internal fun unixPerms(e: FileEntry): String {
+    val f = java.io.File(android.net.Uri.parse(e.uri).path ?: return "----")
+    return (if (e.isDirectory) "d" else "-") + (if (f.canRead()) "r" else "-") + (if (f.canWrite()) "w" else "-") + (if (f.canExecute()) "x" else "-")
 }

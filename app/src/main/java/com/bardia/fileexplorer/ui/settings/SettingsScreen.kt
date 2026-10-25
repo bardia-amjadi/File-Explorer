@@ -104,6 +104,7 @@ fun SettingsScreen(onStorage: () -> Unit, onTrash: () -> Unit, onBack: (() -> Un
             OutlinedButton(onClick = { confirmEmptyTrash = true }) { Text("Empty trash") }
         }
         SectionHeader("Storage access", Modifier.padding(horizontal = 16.dp))
+        com.bardia.fileexplorer.ui.common.AllFilesAccessCard(Modifier.padding(horizontal = 16.dp, vertical = 6.dp))
         OutlinedButton(onClick = onStorage, Modifier.padding(horizontal = 16.dp)) { Text("Manage folders and drives") }
         SectionHeader("About and compatibility", Modifier.padding(horizontal = 16.dp))
         FluentCard(Modifier.padding(horizontal = 16.dp)) {

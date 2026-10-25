@@ -172,7 +172,7 @@ fun Breadcrumbs(rootLabel: String, trail: List<Crumb>, onRoot: () -> Unit, onCru
         }
         itemsIndexed(trail, key = { i, c -> "$i:${c.uri}" }) { index, crumb ->
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Filled.ChevronRight, contentDescription = null, modifier = Modifier.size(18.dp), tint = MaterialTheme.colorScheme.outline)
+                Text("/", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.outline)
                 Text(
                     crumb.name,
                     style = MaterialTheme.typography.labelLarge,

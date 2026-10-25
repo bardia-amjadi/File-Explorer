@@ -362,7 +362,7 @@ private fun PaneView(
             }
         }
         Breadcrumbs(
-            rootLabel = "This device", trail = pane.trail,
+            rootLabel = "/", trail = pane.trail,
             onRoot = { vm.setActivePane(idx); vm.goRoot(idx) },
             onCrumb = { vm.setActivePane(idx); vm.navigateToCrumb(it, idx) },
             modifier = Modifier.fillMaxWidth()

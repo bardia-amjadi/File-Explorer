@@ -168,6 +168,24 @@ fun AppRoot() {
         }
     }
 
+    // Keep real-path roots (/storage/...) in sync with the "All files access" switch; ask once per launch.
+    val resume by com.bardia.fileexplorer.ui.common.rememberResumeTick()
+    var askAllFiles by remember { mutableStateOf(false) }
+    var askedAllFiles by remember { mutableStateOf(false) }
+    LaunchedEffect(resume) {
+        runCatching { c.storage.syncLocalRoots() }
+        if (!c.storage.isAllFilesGranted() && !askedAllFiles) { askedAllFiles = true; askAllFiles = true }
+    }
+    if (askAllFiles) {
+        com.bardia.fileexplorer.design.ConfirmDialog(
+            "Allow access to all files?",
+            "To browse every folder (internal storage, SD card, USB) File Explorer needs Android's \"All files access\". " +
+                "Android will open a settings page where you switch it on. Android still keeps /Android/data and /Android/obb private.",
+            "Open settings", { askAllFiles = false; com.bardia.fileexplorer.ui.common.openAllFilesSettings(ctx, c) }, { askAllFiles = false },
+            dismissLabel = "Not now"
+        )
+    }
+
     val entry by nav.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     val isTop = route in Routes.topLevel

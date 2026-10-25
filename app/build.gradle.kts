@@ -40,7 +40,8 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            if (hasSigning) signingConfig = signingConfigs.getByName("release")
+            // Without secrets the release APK is signed with the auto-generated debug key so it still installs.
+            signingConfig = if (hasSigning) signingConfigs.getByName("release") else signingConfigs.getByName("debug")
         }
     }
 

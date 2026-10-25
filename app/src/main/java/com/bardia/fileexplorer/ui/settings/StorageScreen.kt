@@ -60,6 +60,7 @@ fun StorageScreen(onOpenTrail: (List<Crumb>) -> Unit, onTrash: () -> Unit, onBac
     var removing by remember { mutableStateOf<RootState?>(null) }
     LazyColumn(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         item { AppTopBar("Storage", onBack) }
+        item { com.bardia.fileexplorer.ui.common.AllFilesAccessCard(Modifier.padding(horizontal = 16.dp)) }
         item { SectionHeader("Volumes", Modifier.padding(horizontal = 16.dp)) }
         if (volumes.isEmpty()) item { Text("No storage information available.", Modifier.padding(16.dp)) }
         items(volumes) { v -> VolumeCard(v, grant, Modifier.padding(horizontal = 16.dp)) }
